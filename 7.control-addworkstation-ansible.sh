@@ -13,7 +13,7 @@
 # needs to be in /etc/sudoers already!
 echo "" | sudo tee --append /etc/hosts 2> /dev/null && \
 echo "# Host configuration for Ansible Controller and/or Workstations" | sudo tee --append /etc/hosts 2> /dev/null && \
-echo "192.168.1.7   workstation2" | sudo tee --append /etc/hosts 2> /dev/null && \
+echo "$1   workstation" | sudo tee --append /etc/hosts 2> /dev/null && \
 echo "192.168.1.8   workstation3" | sudo tee --append /etc/hosts 2> /dev/null
 
 # make sure ansible account already exists on remote machine!

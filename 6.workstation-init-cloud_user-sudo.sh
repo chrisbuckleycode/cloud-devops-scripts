@@ -21,5 +21,5 @@ echo "ansible ALL=(ALL) NOPASSWD: ALL" | (EDITOR="tee -a" visudo)
 # needs to be in /etc/sudoers already!
 echo "" | sudo tee --append /etc/hosts 2> /dev/null && \
 echo "# Host configuration for Ansible Controller and/or Workstations" | sudo tee --append /etc/hosts 2> /dev/null && \
-echo "192.168.1.100   control" | sudo tee --append /etc/hosts 2> /dev/null && \
-echo "192.168.1.101   randomhost" | sudo tee --append /etc/hosts 2> /dev/null
+echo "$1   control" | sudo tee --append /etc/hosts 2> /dev/null && \
+echo "192.168.1.123   randomhost" | sudo tee --append /etc/hosts 2> /dev/null
