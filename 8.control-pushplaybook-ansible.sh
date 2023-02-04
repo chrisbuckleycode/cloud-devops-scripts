@@ -14,10 +14,6 @@ cat <<EOF> ~/workstation-setup.yml
 - hosts: workstation
   become: true
   tasks:
-    - name: Ignore host key on first run
-      when: has_entry_in_known_hosts_file.rc == 1
-      set_fact:
-        ansible_ssh_common_args: "-o StrictHostKeyChecking=no"
     - name: install packages via yum task
       yum:
         name: git
@@ -25,4 +21,5 @@ cat <<EOF> ~/workstation-setup.yml
 EOF
 
 # run playbook on inventoried hostnames
-ansible-playbook --inventory ~/inventory /home/ansible/workstation-setup.yml
+# Host key checking disabled, temporary fix, feature add to backlog
+ansible-playbook --inventory ~/inventory ~/workstation-setup.yml --ssh-common-args='-o StrictHostKeyChecking=no'
