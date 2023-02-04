@@ -14,6 +14,10 @@ cat <<EOF> ~/workstation-setup.yml
 - hosts: workstation
   become: true
   tasks:
+    - name: Ignore host key on first run
+      when: has_entry_in_known_hosts_file.rc == 1
+      set_fact:
+        ansible_ssh_common_args: "-o StrictHostKeyChecking=no"
     - name: install packages via yum task
       yum:
         name: git
