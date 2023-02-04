@@ -4,13 +4,13 @@
 
 cloud_user@control
 ```
-curl -sf -L https://raw.githubusercontent.com/chrisbuckleycode/cloud-devops-scripts/ansible/1.control-init-cloud_user-sudo.sh | sudo bash
+curl -sf -L https://raw.githubusercontent.com/chrisbuckleycode/cloud-devops-scripts/main/ansible/1.control-init-cloud_user-sudo.sh | sudo bash
 ```
 
 ansible@control
 ```
 su ansible
-curl -sf -L https://raw.githubusercontent.com/chrisbuckleycode/cloud-devops-scripts/ansible/2.control-init-ansible.sh | bash
+curl -sf -L https://raw.githubusercontent.com/chrisbuckleycode/cloud-devops-scripts/main/ansible/2.control-init-ansible.sh | bash
 ```
 
 ## Add Workstation (Repeat for Every New)
@@ -18,18 +18,18 @@ curl -sf -L https://raw.githubusercontent.com/chrisbuckleycode/cloud-devops-scri
 cloud_user@workstation
 ```
 CONTROL="192.168.1.100"
-curl -sf -L https://raw.githubusercontent.com/chrisbuckleycode/cloud-devops-scripts/ansible/6.workstation-init-cloud_user-sudo.sh | sudo bash -s -- $CONTROL
+curl -sf -L https://raw.githubusercontent.com/chrisbuckleycode/cloud-devops-scripts/main/ansible/6.workstation-init-cloud_user-sudo.sh | sudo bash -s -- $CONTROL
 ```
 
 ansible@control
 ```
 WORKSTATION="192.168.1.8"
-curl -sf -L https://raw.githubusercontent.com/chrisbuckleycode/cloud-devops-scripts/ansible/7.control-addworkstation-ansible.sh | bash -s -- $WORKSTATION
+curl -sf -L https://raw.githubusercontent.com/chrisbuckleycode/cloud-devops-scripts/main/ansible/7.control-addworkstation-ansible.sh | bash -s -- $WORKSTATION
 ```
 
 ## Deploy Playbooks (Ad Hoc)
 
 ansible@control
 ```
-curl -sf -L https://raw.githubusercontent.com/chrisbuckleycode/cloud-devops-scripts/ansible/8.control-pushplaybook-ansible.sh | bash
+curl -sf -L https://raw.githubusercontent.com/chrisbuckleycode/cloud-devops-scripts/main/ansible/8.control-pushplaybook-ansible.sh | bash
 ```
