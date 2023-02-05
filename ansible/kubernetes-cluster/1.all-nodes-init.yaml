@@ -1,0 +1,134 @@
+---
+
+- name: Check existence of containerd config file
+  stat:
+    path: /etc/modules-load.d/containerd.conf
+  register: containerd_conf
+
+- name: If not exist, then create containerd config file
+  copy:
+    content: ""
+    dest: /etc/modules-load.d/containerd.conf
+    force: no
+  when: not containerd_conf.stat.exists
+
+- name: Modules specify
+  blockinfile:
+    path: /etc/modules-load.d/containerd.conf
+    block: |
+         overlay
+         br_netfilter
+  when: not containerd_conf.stat.exists
+
+- name: Load modules
+  service:
+    name: systemd-modules-load
+    state: restarted
+  when: not containerd_conf.stat.exists
+
+- name: Check existence of system config for Kubernetes networking
+  stat:
+    path: /etc/sysctl.d/99-kubernetes-cri.conf
+  register: kubernetes_cri_conf
+
+- name: If not exist, then create Kubernetes networking config file
+  copy:
+    content: ""
+    dest: /etc/sysctl.d/99-kubernetes-cri.conf
+    force: no
+  when: not kubernetes_cri_conf.stat.exists
+
+- name: Set system config for Kubernetes networking
+  blockinfile:
+    path: /etc/sysctl.d/99-kubernetes-cri.conf
+    block: |
+          net.bridge.bridge-nf-call-iptables = 1
+          net.ipv4.ip_forward = 1
+          net.bridge.bridge-nf-call-ip6tables = 1
+
+- name: Apply settings
+  command: sysctl --system
+  when: not kubernetes_cri_conf.stat.exists
+
+- name: Installing containerd
+  apt:
+    name:
+    - containerd.io
+    update_cache: yes
+    state: present
+
+- name: Create dir for containerd conf file
+  file:
+    path: /etc/containerd
+    state: directory
+
+- name: Check existence of containerd conf file
+  stat:
+    path: /etc/containerd/config.toml
+  register: configtoml
+
+- name: Configure containerd with default config
+  shell: /usr/bin/containerd config default > /etc/containerd/config.toml
+  when: not configtoml.stat.exists
+
+- name: Restart containerd service so using new config
+  systemd:
+    name: containerd
+    state: restarted
+    enabled: yes
+    daemon-reload: yes
+  register: systemd_containerd
+  when: not configtoml.stat.exists
+
+- name: Enable containerd service
+  systemd:
+    name: containerd
+    state: started
+    enabled: yes
+    daemon-reload: yes
+  register: systemd_containerd
+
+- name: Disable swap
+  command: "swapoff -a"
+
+- name: Installing dependencies
+  apt:
+    name:
+    - apt-transport-https
+    - curl
+    update_cache: yes
+    state: present
+
+- name: Download and add GPG key
+  apt_key:
+    url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
+    state: present
+
+- name: Add Kubernetes to repo list
+  apt_repository:
+    repo: deb http://apt.kubernetes.io/ kubernetes-xenial main
+    state: present
+    filename: kubernetes
+    mode: 0600
+
+- name: Installing Kubernetes packages.
+  apt:
+    name:
+    - kubeadm='1.24.0-00'
+    - kubectl='1.24.0-00'
+    - kubelet='1.24.0-00'
+    update_cache: yes
+    state: present
+
+- name: Stop auto updates for kubeadm
+  dpkg_selections:
+    name: kubeadm
+    selection: hold
+- name: Stop auto updates for kubectl
+  dpkg_selections:
+    name: kubectl
+    selection: hold
+- name: Stop auto updates for kubelet
+  dpkg_selections:
+    name: kubelet
+    selection: hold
