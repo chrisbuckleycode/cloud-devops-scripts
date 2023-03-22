@@ -1,9 +1,10 @@
-# cloud-devops-scripts
-Cloud/DevOps related code/scripts too small to deserve it's own repo
-e.g. bash/shell, python, ansible
-For public cloud see elsewhere
-e.g. cloud-devops-aws, cloud-devops-azure
+# Cloud DevOps Scripts
 
-## Ansible
+Various infrastructure and application related scripts/IaC including Python, Ansible and Terraform (AWS, Azure).
 
-[Ansible](./ansible/)
+## Usage
+
+For production use, recommend you parameterize/modularize. This has been intentionally not done to better serve as aide memoire and learning material.
+
+## License
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)

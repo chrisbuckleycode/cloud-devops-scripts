@@ -1,0 +1,9 @@
+deploy:
+  image:
+    name: dtzar/helm-kubectl:latest
+    entrypoint: [""]
+  script:
+    - kubectl config get-contexts
+    - kubectl config use-context chrisbuckleydevops/kubernetes-application:agent
+    - helm repo add bitnami https://charts.bitnami.com/bitnami
+    - helm install my-release bitnami/wordpress
