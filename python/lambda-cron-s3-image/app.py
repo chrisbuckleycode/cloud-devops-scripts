@@ -9,10 +9,12 @@ from aws_cdk import (
 )
 
 
+account=os.environ["CDK_DEFAULT_ACCOUNT"]
+region=os.environ["CDK_DEFAULT_REGION"]
+
 class LambdaCronStack(Stack):
     def __init__(self, app: App, id: str) -> None:
         super().__init__(app, id)
-
 
         # Create an S3 bucket
         bucket_name = 'webcam-images-bucket-f5s7f46f4f7'
@@ -60,7 +62,7 @@ class LambdaCronStack(Stack):
         lambdaFn.add_to_role_policy(
             _iam.PolicyStatement(
                 actions=['logs:PutLogEvents'],
-                resources=[f'arn:aws:logs:{Aws.REGION}:{Aws.ACCOUNT_ID}:log-group:/aws/lambda/{function.function_name}:*']
+                resources=[f'arn:aws:logs:{region}:{account}:log-group:/aws/lambda/{function.function_name}:*']
             )
         )
 
