@@ -19,7 +19,7 @@ def main(event, context):
     filename = f'beach_{timestamp}.jpg'
 
     # Upload the image to S3 with the new filename
-    s3.upload_fileobj(image_data, 'webcam-images-bucket-f5s7f7', filename)
+    s3.upload_fileobj(image_data, bucket_name, filename)
 
     # Log the successful event to CloudWatch
     cloudwatch.put_metric_data(
