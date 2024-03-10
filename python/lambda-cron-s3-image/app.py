@@ -18,11 +18,6 @@ class LambdaCronStack(Stack):
         bucket_name = 'webcam-images-bucket-f5s7f46f4f7'
         bucket = _s3.Bucket(self, bucket_name)
 
-        # Create a CloudWatch namespace
-        namespace_name = 'AWS/Lambda34t43t3'
-        namespace = _cw.CfnNamespace(self, 'MyCloudWatchNamespace', name=namespace_name)
-
-
         with open("lambda-handler.py", encoding="utf8") as fp:
             handler_code = fp.read()
 
