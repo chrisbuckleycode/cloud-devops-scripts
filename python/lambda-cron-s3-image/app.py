@@ -62,7 +62,7 @@ class LambdaCronStack(Stack):
         lambdaFn.add_to_role_policy(
             _iam.PolicyStatement(
                 actions=['logs:PutLogEvents'],
-                resources=[f'arn:aws:logs:{region}:{account}:log-group:/aws/lambda/{function.function_name}:*']
+                resources=[f'arn:aws:logs:{region}:{account}:log-group:/aws/lambda/{lambdaFn.function_name}:*']
             )
         )
 
