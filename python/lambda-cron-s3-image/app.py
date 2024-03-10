@@ -14,7 +14,7 @@ region=os.environ["CDK_DEFAULT_REGION"]
 
 
 class LambdaCronStack(Stack):
-    def __init__(self, app: App, id: str) -> None:
+    def __init__(self, app: App, id: str, runtime=Runtime.PYTHON_3_12) -> None:
         super().__init__(app, id)
 
         # Create an S3 bucket
