@@ -15,7 +15,7 @@ $ sudo apt install unzip
 $ curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
 $ unzip awscliv2.zip
 $ sudo ./aws/install
-$ aws configure
+$ aws configure # paste access key, secret key, region
 $ sudo apt install python3-pip
 $ sudo apt install python3.10-venv
 $ python3 -m venv .env
