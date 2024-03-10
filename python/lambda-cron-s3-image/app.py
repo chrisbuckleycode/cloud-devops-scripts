@@ -20,7 +20,7 @@ class LambdaCronStack(Stack):
 
         # Create a CloudWatch namespace
         namespace_name = 'AWS/Lambda34t43t3'
-        namespace = _cw.Namespace(self, namespace_name)
+        namespace = _cw.CfnNamespace(self, 'MyCloudWatchNamespace', name=namespace_name)
 
 
         with open("lambda-handler.py", encoding="utf8") as fp:
