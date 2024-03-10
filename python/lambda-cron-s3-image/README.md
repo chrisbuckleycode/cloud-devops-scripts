@@ -8,9 +8,16 @@ This example creates:
 
 ## Build
 
-To build this app, you need to be in this example's root folder. Then run the following:
+To build this app, you need to be in this example's root folder. Then run the following (instructions for fresh Ubuntu, has python3 and git pre-installed):
 
 ```bash
+$ sudo apt install unzip
+$ curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+$ unzip awscliv2.zip
+$ sudo ./aws/install
+$ aws configure
+$ sudo apt install python3-pip
+$ sudo apt install python3.10-venv
 $ python3 -m venv .env
 $ source .env/bin/activate
 $ pip install -r requirements.txt
@@ -21,6 +28,9 @@ This will install the necessary CDK, then this example's dependencies, and then 
 Install the latest version of the AWS CDK CLI:
 
 ```shell
+$ curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+$ source ~/.bashrc
+$ nvm install --lts
 $ npm i -g aws-cdk
 ```
 
