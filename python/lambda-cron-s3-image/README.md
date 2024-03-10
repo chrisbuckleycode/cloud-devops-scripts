@@ -38,6 +38,7 @@ $ npm i -g aws-cdk
 
 First boostrap cdk:
 ```shell
+$ export IMAGE_BUCKET=chosenbucketname
 $ cdk bootstrap aws://$(aws sts get-caller-identity --query Account --output text)/$(aws configure get default.region)
 ```
 

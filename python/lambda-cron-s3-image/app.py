@@ -17,7 +17,7 @@ class LambdaCronStack(Stack):
         super().__init__(app, id)
 
         # Create an S3 bucket
-        bucket_name = 'webcam-images-bucket-f5s7f46f4f7'
+        bucket_name = os.environ["IMAGE_BUCKET"]
         bucket = _s3.Bucket(self, bucket_name)
 
         with open("lambda-handler.py", encoding="utf8") as fp:
