@@ -14,7 +14,7 @@ region=os.environ["CDK_DEFAULT_REGION"]
 
 
 class LambdaCronStack(Stack):
-    def __init__(self, app: App, id: str, runtime=_lambda.Runtime.PYTHON_3_12) -> None:
+    def __init__(self, app: App, id: str) -> None:
         super().__init__(app, id)
 
         # Create an S3 bucket
@@ -29,7 +29,7 @@ class LambdaCronStack(Stack):
             code=_lambda.InlineCode(handler_code),
             handler="index.main",
             timeout=Duration.seconds(300),
-            runtime=_lambda.Runtime.PYTHON_3_7,
+            runtime=_lambda.Runtime.PYTHON_3_12,
         )
 
         # Run every day at 6PM UTC
