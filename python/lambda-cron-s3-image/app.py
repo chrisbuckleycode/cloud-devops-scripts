@@ -37,8 +37,8 @@ class LambdaCronStack(Stack):
         rule = events.Rule(
             self, "Rule",
             schedule=events.Schedule.cron(
-                minute='0',
-                hour='18',
+                minute='0/2',
+                hour='*',
                 month='*',
                 week_day='MON-FRI',
                 year='*'),
