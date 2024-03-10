@@ -40,7 +40,7 @@ class LambdaCronStack(Stack):
                 minute='0/2',
                 hour='*',
                 month='*',
-                week_day='MON-FRI',
+                week_day='?',
                 year='*'),
         )
         rule.add_target(targets.LambdaFunction(lambdaFn))
