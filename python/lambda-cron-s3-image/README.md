@@ -36,6 +36,11 @@ $ npm i -g aws-cdk
 
 ## Deploy
 
+First boostrap cdk:
+```shell
+$ cdk bootstrap aws://$(aws sts get-caller-identity --query Account --output text)/$(aws configure get default.region)
+```
+
 Run `cdk deploy`. This will deploy / redeploy your Stack to your AWS Account.
 
 After the deployment you will see the API's URL, which represents the url you can then use.
