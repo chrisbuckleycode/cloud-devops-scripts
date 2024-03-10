@@ -12,13 +12,14 @@ import os
 account=os.environ["CDK_DEFAULT_ACCOUNT"]
 region=os.environ["CDK_DEFAULT_REGION"]
 
+# Create an S3 bucket
+bucket_name = os.environ["IMAGE_BUCKET"]
+bucket = _s3.Bucket(self, bucket_name)
+
+
 class LambdaCronStack(Stack):
     def __init__(self, app: App, id: str) -> None:
         super().__init__(app, id)
-
-        # Create an S3 bucket
-        bucket_name = os.environ["IMAGE_BUCKET"]
-        bucket = _s3.Bucket(self, bucket_name)
 
         with open("lambda-handler.py", encoding="utf8") as fp:
             handler_code = fp.read()
