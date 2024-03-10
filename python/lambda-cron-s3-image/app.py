@@ -39,8 +39,8 @@ class LambdaCronStack(Stack):
             schedule=events.Schedule.cron(
                 minute='*/2',
                 hour='*',
-                month='?',
-                week_day='*',
+                month='*',
+                week_day='?',
                 year='*'),
         )
         rule.add_target(targets.LambdaFunction(lambdaFn))
