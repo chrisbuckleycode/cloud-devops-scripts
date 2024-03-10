@@ -36,12 +36,7 @@ class LambdaCronStack(Stack):
         # See https://docs.aws.amazon.com/lambda/latest/dg/tutorial-scheduled-events-schedule-expressions.html
         rule = events.Rule(
             self, "Rule",
-            schedule=events.Schedule.cron(
-                minute='0/2',
-                hour='*',
-                month='*',
-                week_day='?',
-                year='*'),
+            schedule=events.Schedule.cron(minute='0/2'),
         )
         rule.add_target(targets.LambdaFunction(lambdaFn))
 
