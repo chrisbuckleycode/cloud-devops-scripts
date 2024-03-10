@@ -7,7 +7,7 @@ from aws_cdk import (
     aws_events_targets as targets,
     App, Duration, Stack
 )
-
+import os
 
 account=os.environ["CDK_DEFAULT_ACCOUNT"]
 region=os.environ["CDK_DEFAULT_REGION"]
