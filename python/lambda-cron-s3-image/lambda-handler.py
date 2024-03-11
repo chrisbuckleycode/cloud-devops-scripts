@@ -19,6 +19,7 @@ def main(event, context):
     filename = f'beach_{timestamp}.jpg'
 
     # Upload the image to S3 with the new filename
+    bucket_name = os.getenv('BUCKET_NAME')
     s3.upload_fileobj(image_data, bucket_name, filename)
 
     # Log the successful event to CloudWatch

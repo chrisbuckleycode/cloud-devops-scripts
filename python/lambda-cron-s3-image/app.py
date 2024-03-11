@@ -30,7 +30,8 @@ class LambdaCronStack(Stack):
             handler="index.main",
             timeout=Duration.seconds(300),
             runtime=_lambda.Runtime.PYTHON_3_12,
-            layers=[self.create_dependencies_layer(self.stack_name, "lambda-handler")]
+            layers=[self.create_dependencies_layer(self.stack_name, "lambda-handler")],
+            environment=dict(BUCKET_NAME=bucket.bucket_name)
         )
 
         # Run every day at 6PM UTC
