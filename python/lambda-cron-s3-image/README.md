@@ -36,7 +36,7 @@ $ npm i -g aws-cdk
 
 ## Deploy
 
-First boostrap cdk:
+First bootstrap cdk:
 ```shell
 $ export IMAGE_BUCKET=chosenbucketname
 $ cdk bootstrap aws://$(aws sts get-caller-identity --query Account --output text)/$(aws configure get default.region)
@@ -45,6 +45,8 @@ $ cdk bootstrap aws://$(aws sts get-caller-identity --query Account --output tex
 Run `cdk deploy`. This will deploy / redeploy your Stack to your AWS Account.
 
 After the deployment you will see the API's URL, which represents the url you can then use.
+
+Reminder: returning after a while to develop again, you will need to run source and boostrap commands again.
 
 ## Synthesize Cloudformation Template
 
