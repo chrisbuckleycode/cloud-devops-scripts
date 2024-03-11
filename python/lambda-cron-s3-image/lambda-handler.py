@@ -21,7 +21,7 @@ def main(event, context):
 
     # Upload the image to S3 with the new filename
     bucket_name = os.getenv('BUCKET_NAME')
-    s3.upload_fileobj(image_data, bucket_name, filename)
+    s3.upload_fileobj(io.BytesIO(image_data), bucket_name, filename)
 
     # Log the successful event to CloudWatch
     cloudwatch.put_metric_data(
