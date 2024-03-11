@@ -12,44 +12,43 @@ package main
 
 import (
 	"archive/zip"
+	"context"
 	"fmt"
+	"io"
 	"os"
 	"path/filepath"
 
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/s3"
+	"github.com/aws/aws-sdk-go-v2/config"
+	"github.com/aws/aws-sdk-go-v2/service/s3"
 )
 
 func main() {
 	if len(os.Args) < 2 {
-		fmt.Println("Usage: go run main.go <bucket_name>")
+		fmt.Println("Usage: go run go_s3_downloader.go <bucket_name> or ./s3dl <bucket_name>")
 		return
 	}
 
 	bucketName := os.Args[1]
 
-	sess, err := session.NewSession(&aws.Config{
-		Region: aws.String("us-east-1"), // Update with your desired AWS region
-	})
+	cfg, err := config.LoadDefaultConfig(context.TODO())
 	if err != nil {
-		fmt.Printf("Failed to create AWS session: %s\n", err.Error())
+		fmt.Printf("Failed to load AWS SDK config: %v\n", err)
 		return
 	}
 
-	s3Client := s3.New(sess)
+	s3Client := s3.NewFromConfig(cfg)
 
-	files, err := listBucketFiles(s3Client, bucketName)
+	files, err := listBucketFiles(context.TODO(), s3Client, bucketName)
 	if err != nil {
-		fmt.Printf("Failed to retrieve files from S3 bucket: %s\n", err.Error())
+		fmt.Printf("Failed to retrieve files from S3 bucket: %v\n", err)
 		return
 	}
 
 	outputPath := "archive.zip" // Output zip file name
 
-	err = ZipFiles(outputPath, files)
+	err = ZipFiles(outputPath, files, s3Client, bucketName)
 	if err != nil {
-		fmt.Printf("Failed to create zip file: %s\n", err.Error())
+		fmt.Printf("Failed to create zip file: %v\n", err)
 		return
 	}
 
@@ -57,27 +56,29 @@ func main() {
 }
 
 // listBucketFiles retrieves the list of files in the specified S3 bucket.
-func listBucketFiles(s3Client *s3.S3, bucketName string) ([]string, error) {
+func listBucketFiles(ctx context.Context, s3Client *s3.Client, bucketName string) ([]string, error) {
 	var files []string
 
-	err := s3Client.ListObjectsV2Pages(&s3.ListObjectsV2Input{
-		Bucket: aws.String(bucketName),
-	}, func(page *s3.ListObjectsV2Output, lastPage bool) bool {
-		for _, obj := range page.Contents {
-			files = append(files, *obj.Key)
-		}
-		return true
+	paginator := s3.NewListObjectsV2Paginator(s3Client, &s3.ListObjectsV2Input{
+		Bucket: &bucketName,
 	})
 
-	if err != nil {
-		return nil, err
+	for paginator.HasMorePages() {
+		output, err := paginator.NextPage(ctx)
+		if err != nil {
+			return nil, err
+		}
+
+		for _, obj := range output.Contents {
+			files = append(files, *obj.Key)
+		}
 	}
 
 	return files, nil
 }
 
 // ZipFiles creates a zip file containing the specified files.
-func ZipFiles(outputPath string, files []string) error {
+func ZipFiles(outputPath string, files []string, s3Client *s3.Client, bucketName string) error {
 	zipFile, err := os.Create(outputPath)
 	if err != nil {
 		return err
@@ -88,7 +89,7 @@ func ZipFiles(outputPath string, files []string) error {
 	defer zipWriter.Close()
 
 	for _, file := range files {
-		err = addS3ObjectToZip(zipWriter, file)
+		err = addS3ObjectToZip(zipWriter, s3Client, bucketName, file)
 		if err != nil {
 			return err
 		}
@@ -98,41 +99,27 @@ func ZipFiles(outputPath string, files []string) error {
 }
 
 // addS3ObjectToZip downloads an S3 object and adds it to the specified zip writer.
-func addS3ObjectToZip(zipWriter *zip.Writer, s3Key string) error {
-	sess, err := session.NewSession(&aws.Config{
-		Region: aws.String("us-east-1"), // Update with your desired AWS region
+func addS3ObjectToZip(zipWriter *zip.Writer, s3Client *s3.Client, bucketName, s3Key string) error {
+	resp, err := s3Client.GetObject(context.TODO(), &s3.GetObjectInput{
+		Bucket: &bucketName,
+		Key:    &s3Key,
 	})
 	if err != nil {
 		return err
 	}
+	defer resp.Body.Close()
 
-	downloader := s3.NewDownloader(sess)
-
-	buf := aws.NewWriteAtBuffer([]byte{})
-
-	_, err = downloader.Download(buf, &s3.GetObjectInput{
-		Bucket: aws.String(bucketName),
-		Key:    aws.String(s3Key),
-	})
-	if err != nil {
-		return err
-	}
-
-	header, err := zip.FileInfoHeader(&zip.FileHeader{
+	header := &zip.FileHeader{
+		Name:   filepath.Base(s3Key),
 		Method: zip.Deflate,
-	})
-	if err != nil {
-		return err
 	}
-
-	header.Name = filepath.Base(s3Key)
 
 	writer, err := zipWriter.CreateHeader(header)
 	if err != nil {
 		return err
 	}
 
-	_, err = writer.Write(buf.Bytes())
+	_, err = io.Copy(writer, resp.Body)
 	if err != nil {
 		return err
 	}
