@@ -11,7 +11,7 @@ This example creates:
 Set:
 - local OS build env variable IMAGE_BUCKET
 - image_url in lambda-handler.py
-- (OPTIONAL) change image capture frequency from every 10s to something else
+- (OPTIONAL) change image capture frequency from every 2 minutes to something else
 
 
 ## Build

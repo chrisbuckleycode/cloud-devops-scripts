@@ -34,11 +34,11 @@ class LambdaCronStack(Stack):
             environment=dict(BUCKET_NAME=bucket.bucket_name) # passing the upload bucket to the handler function
         )
 
-        # Run every 10 minutes
+        # Run every 2 minutes
         # See https://docs.aws.amazon.com/lambda/latest/dg/tutorial-scheduled-events-schedule-expressions.html
         rule = events.Rule(
             self, "Rule",
-            schedule=events.Schedule.cron(minute='0/10'),
+            schedule=events.Schedule.cron(minute='0/2'),
         )
         rule.add_target(targets.LambdaFunction(lambdaFn))
 
