@@ -2,6 +2,7 @@ import boto3
 import requests
 import datetime
 import os
+import io
 
 s3 = boto3.client('s3')
 cloudwatch = boto3.client('cloudwatch')
