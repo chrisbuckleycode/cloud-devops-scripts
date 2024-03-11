@@ -6,6 +6,14 @@ This example creates:
 - a lambda function that executes a cron scheduled event to download an image and upload it to the bucket
 - associated IAM
 
+# Variables
+
+Set:
+- local OS build env variable IMAGE_BUCKET
+- image_url in lambda-handler.py
+- (OPTIONAL) change image capture frequency from every 10s to something else
+
+
 ## Build
 
 To build this app, you need to be in this example's root folder. Then run the following (instructions for fresh Ubuntu, has python3 and git pre-installed):
@@ -38,7 +46,7 @@ $ npm i -g aws-cdk
 
 First bootstrap cdk:
 ```shell
-$ export IMAGE_BUCKET=chosenbucketname
+$ export IMAGE_BUCKET=chosenbucketnameidentifier
 $ cdk bootstrap aws://$(aws sts get-caller-identity --query Account --output text)/$(aws configure get default.region)
 ```
 

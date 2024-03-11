@@ -31,14 +31,14 @@ class LambdaCronStack(Stack):
             timeout=Duration.seconds(300),
             runtime=_lambda.Runtime.PYTHON_3_12,
             layers=[self.create_dependencies_layer(self.stack_name, "lambda-handler")],
-            environment=dict(BUCKET_NAME=bucket.bucket_name)
+            environment=dict(BUCKET_NAME=bucket.bucket_name) # passing the upload bucket to the handler function
         )
 
-        # Run every day at 6PM UTC
+        # Run every 10 minutes
         # See https://docs.aws.amazon.com/lambda/latest/dg/tutorial-scheduled-events-schedule-expressions.html
         rule = events.Rule(
             self, "Rule",
-            schedule=events.Schedule.cron(minute='0/2'),
+            schedule=events.Schedule.cron(minute='0/10'),
         )
         rule.add_target(targets.LambdaFunction(lambdaFn))
 
@@ -76,15 +76,15 @@ class LambdaCronStack(Stack):
 
 
     def create_dependencies_layer(self, project_name, function_name: str) -> _lambda.LayerVersion:
-        requirements_file = "requirements-handler.txt"  # 👈🏽 point to requirements.txt
-        output_dir = f".build/app"  # 👈🏽 a temporary directory to store the dependencies
+        requirements_file = "requirements-handler.txt" # requirements for the handler only
+        output_dir = f".build/app"  # temporary directory to store the dependencies
 
         if not os.environ.get("SKIP_PIP"):
-            # 👇🏽 download the dependencies and store them in the output_dir
+            # download the dependencies and store them in the output_dir
             subprocess.check_call(f"pip install -r {requirements_file} -t {output_dir}/python".split())
 
-        layer_id = f"{project_name}-{function_name}-dependencies"  # 👈🏽 a unique id for the layer
-        layer_code = _lambda.Code.from_asset(output_dir)  # 👈🏽 import the dependencies / code
+        layer_id = f"{project_name}-{function_name}-dependencies"  # a unique id for the layer
+        layer_code = _lambda.Code.from_asset(output_dir)  # import the dependencies / code
 
         my_layer = _lambda.LayerVersion(
             self,

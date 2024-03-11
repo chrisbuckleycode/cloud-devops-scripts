@@ -18,7 +18,7 @@ def main(event, context):
     timestamp = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
 
     # Create a new filename with the timestamp
-    filename = f'beach_{timestamp}.jpg'
+    filename = f'image_{timestamp}.jpg'
 
     # Upload the image to S3 with the new filename
     bucket_name = os.getenv('BUCKET_NAME')
