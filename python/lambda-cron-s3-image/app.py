@@ -7,7 +7,7 @@ from aws_cdk import (
     aws_events_targets as targets,
     App, Duration, Stack
 )
-import os
+import os, subprocess # os, subprocess required for lambda layers to download dependencies
 
 account=os.environ["CDK_DEFAULT_ACCOUNT"]
 region=os.environ["CDK_DEFAULT_REGION"]
@@ -30,6 +30,7 @@ class LambdaCronStack(Stack):
             handler="index.main",
             timeout=Duration.seconds(300),
             runtime=_lambda.Runtime.PYTHON_3_12,
+            layers=[self.create_dependencies_layer(self.stack_name, "lambda-handler")]
         )
 
         # Run every day at 6PM UTC
@@ -63,6 +64,26 @@ class LambdaCronStack(Stack):
                 resources=[f'arn:aws:logs:{region}:{account}:log-group:/aws/lambda/*']
             )
         )
+
+
+    def create_dependencies_layer(self, project_name, function_name: str) -> _lambda.LayerVersion:
+        requirements_file = "requirements-handler.txt"  # 👈🏽 point to requirements.txt
+        output_dir = f".build/app"  # 👈🏽 a temporary directory to store the dependencies
+
+        if not os.environ.get("SKIP_PIP"):
+            # 👇🏽 download the dependencies and store them in the output_dir
+            subprocess.check_call(f"pip install -r {requirements_file} -t {output_dir}/python".split())
+
+        layer_id = f"{project_name}-{function_name}-dependencies"  # 👈🏽 a unique id for the layer
+        layer_code = _lambda.Code.from_asset(output_dir)  # 👈🏽 import the dependencies / code
+
+        my_layer = _lambda.LayerVersion(
+            self,
+            layer_id,
+            code=layer_code,
+        )
+
+        return my_layer
 
 
 app = App()
