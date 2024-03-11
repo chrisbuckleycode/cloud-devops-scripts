@@ -1,0 +1,2 @@
+requests==2.31.0
+# boto3==1.34.59   boto3 probably not required as already in image, commenting out for now
