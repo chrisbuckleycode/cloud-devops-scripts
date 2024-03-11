@@ -66,6 +66,14 @@ class LambdaCronStack(Stack):
             )
         )
 
+        # Grant the Lambda function permission to put metric data
+        lambdaFn.add_to_role_policy(
+            _iam.PolicyStatement(
+                actions=['cloudwatch:PutMetricData'],
+                resources=['*']
+            )
+        )
+
 
     def create_dependencies_layer(self, project_name, function_name: str) -> _lambda.LayerVersion:
         requirements_file = "requirements-handler.txt"  # 👈🏽 point to requirements.txt
