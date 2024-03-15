@@ -14,8 +14,8 @@ helm install kube-prometheus-stack prometheus-community/kube-prometheus-stack --
 kubectl --namespace monitoring get pods -l "release=kube-prometheus-stack" -owide
 
 # Intentional delay
-echo "Waiting 10 seconds for pods to be ready for port-forwarding..."
-sleep 10
+echo "Waiting 30 seconds for pods to be ready for port-forwarding..."
+sleep 30
 echo "Finished waiting."
 
 # Forward service ports
