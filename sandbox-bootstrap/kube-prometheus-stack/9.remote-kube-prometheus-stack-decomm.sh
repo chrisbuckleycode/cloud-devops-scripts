@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 
+# Kill any still forwarded ports
 pkill -f port-forward
+
+# Uninstall helm chart, delete leftover CRDs, delete namespace
 helm uninstall kube-prometheus-stack --namespace monitoring
 kubectl delete crd alertmanagerconfigs.monitoring.coreos.com
 kubectl delete crd alertmanagers.monitoring.coreos.com
