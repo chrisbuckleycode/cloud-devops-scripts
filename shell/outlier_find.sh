@@ -1,11 +1,15 @@
 #!/usr/bin/env bash
 
+# Description:
+# - Find outlier processes from commands that return tabular info
+# - Outliers are identified using a measure of deviation: 'z-scores'
+# - Edit 'table' below to customize or add your own new commands
+
 # Usage:
-#
-# Install pre-requisites e.g.
-# sudo yum install -y sysstat
-# sudo apt install -y sysstat
-# Modify the z_score lower/upper bounds to catch more/fewer outliers
+# - Install pre-requisites e.g.
+#     sudo yum install -y sysstat
+#     sudo apt install -y sysstat
+# - Modify the z_score lower/upper bounds to catch more/fewer outliers
 
 
 # Define the table variable
