@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 from aws_cdk import (
     aws_events as events,
     aws_lambda as _lambda,

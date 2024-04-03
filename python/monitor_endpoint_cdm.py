@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 # CDM live monitor (cpu, disk, memory)
 import psutil
 import time
