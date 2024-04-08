@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 import boto3
 import requests
 import datetime
