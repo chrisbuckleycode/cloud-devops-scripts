@@ -3,6 +3,9 @@
 # Install script for Zabbix Server, choices: Ubuntu 22.04, Apache web server, MySQL database. Reference:
 # https://www.zabbix.com/download?zabbix=6.0&os_distribution=ubuntu&os_version=24.04&components=server_frontend_agent&db=mysql&ws=apache
 
+# Set the database password
+DB_PASSWORD="password"
+
 # Check if running with sudo
 if [ "$(id -u)" != "0" ]; then
     echo "Please run this script with sudo."
@@ -27,7 +30,7 @@ apt install -y mysql-server
 
 # Mysql commands to create db, user etc.
 mysql -e "create database zabbix character set utf8mb4 collate utf8mb4_bin;"
-mysql -e "create user zabbix@localhost identified by 'password';"
+mysql -e "create user zabbix@localhost identified by '$DB_PASSWORD';"
 mysql -e "grant all privileges on zabbix.* to zabbix@localhost;"
 mysql -e "set global log_bin_trust_function_creators = 1;"
 
@@ -35,13 +38,13 @@ mysql -e "set global log_bin_trust_function_creators = 1;"
 echo "Running sql script to import schema and data..."
 echo "mysql warning is normal, please wait up to one hour..."
 echo "If not completed after one hour due to hanging, quit and re-run script"
-zcat /usr/share/zabbix-sql-scripts/mysql/server.sql.gz | mysql --default-character-set=utf8mb4 -u zabbix -ppassword zabbix
+zcat /usr/share/zabbix-sql-scripts/mysql/server.sql.gz | mysql --default-character-set=utf8mb4 -u zabbix -p$DB_PASSWORD zabbix
 
 # Disable log_bin_trust_function_creators option
 mysql -e "set global log_bin_trust_function_creators = 1;"
 
 # Configure the database at /etc/zabbix/zabbix_server.conf
-sed -i 's/# DBPassword=/DBPassword=password/g' /etc/zabbix/zabbix_server.conf
+sed -i "s/# DBPassword=/DBPassword=$DB_PASSWORD/g" /etc/zabbix/zabbix_server.conf
 
 # Start Zabbix server and agent processes
 systemctl restart zabbix-server zabbix-agent apache2
@@ -60,4 +63,3 @@ echo ""
 echo "- Follow the Zabbix wizard. Accept the defaults but remember to specify your database password."
 echo ""
 echo "- At the logon page, the default credentials are username: Admin; password: zabbix"
-
