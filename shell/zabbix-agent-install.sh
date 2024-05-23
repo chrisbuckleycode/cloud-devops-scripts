@@ -24,9 +24,7 @@ apt update
 apt install zabbix-agent2 zabbix-agent2-plugin-*
 
 # Edit agent configuration file with server details
-
 CONFIG_FILE="/etc/zabbix/zabbix_agent2.conf"
-
 sed -i "s/^Server=127.0.0.1/Server=$SERVER_IP/" "$CONFIG_FILE"
 sed -i "s/^ServerActive=127.0.0.1/ServerActive=$SERVER_IP/" "$CONFIG_FILE"
 sed -i "s/^Hostname=Zabbix server/Hostname=$SERVER_HOSTNAME/" "$CONFIG_FILE"
@@ -50,8 +48,3 @@ echo "- On the Zabbix server you should be able to telnet to the target VM (conn
 echo "  telnet <IP> 10050"
 echo ""
 echo "- Go to the Zabbix server web UI menu and Configuration, Hosts, Create host"
-
-
-
-
-
