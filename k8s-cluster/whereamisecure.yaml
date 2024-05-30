@@ -1,0 +1,203 @@
+# Copyright 2021 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: whereamisecure
+  labels:
+    app: whereamisecure
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  labels:
+    app: whereamisecure
+  name: whereamisecure
+  namespace: whereamisecure
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: whereamisecure
+  name: whereamisecure
+  namespace: whereamisecure
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 8080
+    name: http # adding for Istio
+  type: ClusterIP
+  selector:
+    app: whereamisecure
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-whereamisecure
+  namespace: whereamisecure
+  annotations:
+    cert-manager.io/issuer: "letsencrypt-staging"
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+spec:
+  tls:
+  - hosts:
+    - whereamisecure.XXXXX.nip.io
+    secretName: whereamisecure-tls
+  rules:
+  - host: whereamisecure.XXXXX.nip.io
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: whereamisecure
+            port:
+              number: 80
+  ingressClassName: nginx
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    app: whereamisecure
+  name: whereamisecure
+  namespace: whereamisecure
+data:
+  BACKEND_ENABLED: "False" # flag to enable backend service call "False" || "True"
+  # when defining the BACKEND_SERVICE using an HTTP protocol, indicate HTTP or HTTPS; if using gRPC, use the host name only
+  BACKEND_SERVICE: "http://whereamisecure-backend" # substitute with corresponding service name - this example assumes both services are in the same namespace  
+  METADATA:        "frontend" # arbitrary string that gets returned in payload - can be used to track which services you're interacting with 
+  ECHO_HEADERS:    "False" # flag to enable the payload including all headers received in the `echo_headers` field if set to "True"
+  GRPC_ENABLED:    "False" # flag to switch whereamisecure service to gRPC mode
+  TRACE_SAMPLING_RATIO: "0.00" # trace sampling ratio; i.e. the % likelyhood a trace will be sent to Cloud Trace; setting to zero disables tracing; expects float. "0.10" == 10%
+  HOST: "0.0.0.0" # host to listen on - setting this to "[::]" will support IPv6
+# [END gke_k8s_configmap_configmap_whereamisecure_configmap]
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: whereamisecure
+  name: whereamisecure
+  namespace: whereamisecure
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: whereamisecure
+  template:
+    metadata:
+      labels:
+        app: whereamisecure
+        version: v1
+    spec:
+      serviceAccountName: whereamisecure
+      securityContext:
+        fsGroup: 1000
+        runAsGroup: 1000
+        runAsNonRoot: true
+        runAsUser: 1000
+      containers:
+      - name: whereamisecure
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+              - all
+          privileged: false
+          readOnlyRootFilesystem: true
+        image: us-docker.pkg.dev/google-samples/containers/gke/whereamisecure:v1.2.22
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "250m"
+          limits:
+            memory: "512Mi"
+            cpu: "250m"
+        ports:
+          - name: http
+            containerPort: 8080
+        livenessProbe:
+          httpGet:
+              path: /healthz
+              port: 8080
+              scheme: HTTP
+          initialDelaySeconds: 10
+          periodSeconds: 15
+          timeoutSeconds: 5
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: 8080
+            scheme: HTTP
+          initialDelaySeconds: 10
+          timeoutSeconds: 1
+        env:
+          - name: NODE_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: spec.nodeName
+          - name: POD_NAMESPACE
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.namespace
+          - name: POD_IP
+            valueFrom:
+              fieldRef:
+                fieldPath: status.podIP
+          - name: POD_SERVICE_ACCOUNT
+            valueFrom:
+              fieldRef:
+                fieldPath: spec.serviceAccountName
+          - name: BACKEND_ENABLED
+            valueFrom:
+              configMapKeyRef:
+                name: whereamisecure
+                key: BACKEND_ENABLED
+          - name: BACKEND_SERVICE
+            valueFrom:
+              configMapKeyRef:
+                name: whereamisecure
+                key: BACKEND_SERVICE
+          - name: METADATA
+            valueFrom:
+              configMapKeyRef:
+                name: whereamisecure
+                key: METADATA
+          - name: ECHO_HEADERS
+            valueFrom:
+              configMapKeyRef:
+                name: whereamisecure
+                key: ECHO_HEADERS
+          - name: GRPC_ENABLED
+            valueFrom:
+              configMapKeyRef:
+                name: whereamisecure
+                key: GRPC_ENABLED
+          - name: TRACE_SAMPLING_RATIO
+            valueFrom:
+              configMapKeyRef:
+                name: whereamisecure
+                key: TRACE_SAMPLING_RATIO
+          - name: HOST
+            valueFrom:
+              configMapKeyRef:
+                name: whereamisecure
+                key: HOST
+---
+

@@ -1,0 +1,125 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: kube-web-view
+  labels:
+    app: kube-web-view
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: kube-web-view
+  namespace: kube-web-view
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-kube-web-view
+  namespace: kube-web-view
+spec:
+  rules:
+  - host: kube-web-view.XXXXX.nip.io
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: kube-web-view
+            port:
+              number: 80
+  ingressClassName: nginx
+---
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: kube-web-view
+  namespace: kube-web-view
+rules:
+- apiGroups:
+  - '*'
+  resources:
+  - '*'
+  verbs: [list, get]
+- nonResourceURLs:
+  - '*'
+  verbs: [list, get]
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: kube-web-view
+  namespace: kube-web-view
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: kube-web-view
+subjects:
+- kind: ServiceAccount
+  name: kube-web-view
+  namespace: kube-web-view
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    application: kube-web-view
+  name: kube-web-view
+  namespace: kube-web-view
+spec:
+  selector:
+    application: kube-web-view
+  type: ClusterIP
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 8080
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    application: kube-web-view
+  name: kube-web-view
+  namespace: kube-web-view
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      application: kube-web-view
+  template:
+    metadata:
+      labels:
+        application: kube-web-view
+    spec:
+      serviceAccountName: kube-web-view
+      containers:
+      - name: kube-web-view
+        # see https://codeberg.org/hjacobs/kube-web-view/releases
+        image: hjacobs/kube-web-view:23.2.0
+        args:
+        - --port=8080
+        # uncomment the following line to enable pod logs
+        # (disabled by default as they might consider sensitive information)
+        - "--show-container-logs"
+        # uncomment the following line to unhide secret data
+        # see also https://kube-web-view.readthedocs.io/en/latest/security.html
+        # - "--show-secrets"
+        ports:
+        - containerPort: 8080
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+        resources:
+          limits:
+            memory: 100Mi
+          requests:
+            cpu: 5m
+            memory: 100Mi
+        securityContext:
+          readOnlyRootFilesystem: true
+          runAsNonRoot: true
+          runAsUser: 1000
+
