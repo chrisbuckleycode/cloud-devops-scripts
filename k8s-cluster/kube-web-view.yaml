@@ -19,7 +19,7 @@ metadata:
   namespace: kube-web-view
 spec:
   rules:
-  - host: kube-web-view.XXXXX.nip.io
+  - host: kube-web-view.XXXXX.sslip.io
     http:
       paths:
       - path: /

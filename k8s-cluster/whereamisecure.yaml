@@ -50,15 +50,15 @@ metadata:
   name: ingress-whereamisecure
   namespace: whereamisecure
   annotations:
-    cert-manager.io/issuer: "letsencrypt-staging"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
 spec:
   tls:
   - hosts:
-    - whereamisecure.XXXXX.nip.io
+    - whereamisecure.XXXXX.sslip.io
     secretName: whereamisecure-tls
   rules:
-  - host: whereamisecure.XXXXX.nip.io
+  - host: whereamisecure.XXXXX.sslip.io
     http:
       paths:
       - path: /
@@ -80,13 +80,13 @@ metadata:
 data:
   BACKEND_ENABLED: "False" # flag to enable backend service call "False" || "True"
   # when defining the BACKEND_SERVICE using an HTTP protocol, indicate HTTP or HTTPS; if using gRPC, use the host name only
-  BACKEND_SERVICE: "http://whereamisecure-backend" # substitute with corresponding service name - this example assumes both services are in the same namespace  
+  BACKEND_SERVICE: "http://whereami-backend" # substitute with corresponding service name - this example assumes both services are in the same namespace  
   METADATA:        "frontend" # arbitrary string that gets returned in payload - can be used to track which services you're interacting with 
   ECHO_HEADERS:    "False" # flag to enable the payload including all headers received in the `echo_headers` field if set to "True"
-  GRPC_ENABLED:    "False" # flag to switch whereamisecure service to gRPC mode
+  GRPC_ENABLED:    "False" # flag to switch whereami service to gRPC mode
   TRACE_SAMPLING_RATIO: "0.00" # trace sampling ratio; i.e. the % likelyhood a trace will be sent to Cloud Trace; setting to zero disables tracing; expects float. "0.10" == 10%
   HOST: "0.0.0.0" # host to listen on - setting this to "[::]" will support IPv6
-# [END gke_k8s_configmap_configmap_whereamisecure_configmap]
+# [END gke_k8s_configmap_configmap_whereami_configmap]
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -113,7 +113,7 @@ spec:
         runAsNonRoot: true
         runAsUser: 1000
       containers:
-      - name: whereamisecure
+      - name: whereami
         securityContext:
           allowPrivilegeEscalation: false
           capabilities:
@@ -121,14 +121,14 @@ spec:
               - all
           privileged: false
           readOnlyRootFilesystem: true
-        image: us-docker.pkg.dev/google-samples/containers/gke/whereamisecure:v1.2.22
+        image: us-docker.pkg.dev/google-samples/containers/gke/whereami:v1.2.22
         resources:
           requests:
-            memory: "512Mi"
-            cpu: "250m"
+            memory: "200Mi"
+            cpu: "100m"
           limits:
-            memory: "512Mi"
-            cpu: "250m"
+            memory: "200Mi"
+            cpu: "100m"
         ports:
           - name: http
             containerPort: 8080
