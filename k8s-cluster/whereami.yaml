@@ -51,7 +51,7 @@ metadata:
   namespace: whereami
 spec:
   rules:
-  - host: whereami.XXXXX.nip.io
+  - host: whereami.XXXXX.sslip.io
     http:
       paths:
       - path: /
@@ -117,11 +117,11 @@ spec:
         image: us-docker.pkg.dev/google-samples/containers/gke/whereami:v1.2.22
         resources:
           requests:
-            memory: "512Mi"
-            cpu: "250m"
+            memory: "200Mi"
+            cpu: "100m"
           limits:
-            memory: "512Mi"
-            cpu: "250m"
+            memory: "200Mi"
+            cpu: "100m"
         ports:
           - name: http
             containerPort: 8080
