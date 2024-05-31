@@ -2,6 +2,7 @@
 
 # Creates a GKE test cluster, default 3 nodes.
 # Requires gcloud (authenticated) and kubectl or simply run it from GCP Cloud Shell.
+# Instead of own domain, uses a name/ip service like nip.io, sslip.io, traefik.me, ipq.co, fdns.uk (some of these are rate limited at letsencrypt e.g. nip.io)
 
 # Define color codes
 RED='\033[0;31m'
@@ -9,6 +10,8 @@ GREEN='\033[0;32m'
 YELLOW='\033[0;33m'
 BLUE='\033[0;34m'
 NC='\033[0m' # No Color
+
+alias k=kubectl
 
 # Variable configurations
 region="us-central1"
@@ -146,6 +149,12 @@ helm install cert-manager jetstack/cert-manager \
     --namespace cert-manager \
     --set installCRDs=true
 
+# Restore secrets - note that the cert contains the original domain name including ip address. Hence cannot restore secret/cert when the domain name changes. Code commented out and left here for reference purposes.
+# would also require first creating app's namespace for the secret to reside in
+# kubectl apply -f <(awk '!/^ *(resourceVersion|uid): [^ ]+$/' whereamisecure-tls.yaml)
+
+
+# install clusterissuer
 kubectl apply -f cert-manager.yaml
 
 output_staging=$(kubectl describe clusterissuer letsencrypt-staging)
@@ -160,15 +169,15 @@ if [[ $output_prod =~ "The ACME account was registered with the ACME server" ]];
 fi
 
 
-echo -e "${YELLOW}Ready to install kube-prometheus-stack?${NC}"
-# Prompt user to continue
-read -p "Press Enter to continue..."
+#echo -e "${YELLOW}Ready to install kube-prometheus-stack?${NC}"
+## Prompt user to continue
+#read -p "Press Enter to continue..."
 
 
 
-helm install prometheus prometheus-community/kube-prometheus-stack \
-    --create-namespace \
-    --namespace prometheus
+#helm install prometheus prometheus-community/kube-prometheus-stack \
+#    --create-namespace \
+#    --namespace prometheus
 
 
 
@@ -190,9 +199,9 @@ while [[ -z "$ingress_address" ]]; do
     sleep 1
 done
 
-echo -e "${YELLOW}whereami url is:${NC} ${GREEN}whereami.$ingress_external_ip.nip.io ${NC}"
+echo -e "${YELLOW}whereami url is:${NC} ${GREEN}whereami.$ingress_external_ip.sslip.io ${NC}"
 
-curl whereami.$ingress_external_ip.nip.io
+curl whereami.$ingress_external_ip.sslip.io
 
 
 
@@ -218,9 +227,9 @@ while [[ -z "$ingress_address" ]]; do
     sleep 1
 done
 
-echo -e "${YELLOW}kube-web-view url is:${NC} ${GREEN}kube-web-view.$ingress_external_ip.nip.io ${NC}"
+echo -e "${YELLOW}kube-web-view url is:${NC} ${GREEN}kube-web-view.$ingress_external_ip.sslip.io ${NC}"
 
-curl kube-web-view.$ingress_external_ip.nip.io
+curl kube-web-view.$ingress_external_ip.sslip.io
 
 
 
@@ -244,15 +253,14 @@ while [[ -z "$ingress_address" ]]; do
     sleep 1
 done
 
-echo -e "${YELLOW}whereamisecure url is:${NC} ${GREEN}whereamisecure.$ingress_external_ip.nip.io ${NC}"
+echo -e "${YELLOW}whereamisecure url is:${NC} ${GREEN}whereamisecure.$ingress_external_ip.sslip.io ${NC}"
 
-curl whereamisecure.$ingress_external_ip.nip.io
+curl whereamisecure.$ingress_external_ip.sslip.io
+
 
 kubectl get certificate -n whereamisecure
-
 kubectl -n whereamisecure describe certificate whereamisecure-tls
-
-k describe secret whereamisecure-tls -n whereamisecure
+kubectl describe secret whereamisecure-tls -n whereamisecure
 
 
 
