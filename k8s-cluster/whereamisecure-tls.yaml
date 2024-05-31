@@ -1,0 +1,21 @@
+apiVersion: v1
+data:
+  tls.crt: # <base64 encoded certificate. Decode it with: echo TEXT | base64 --decode > tls.crt. Inspect details with: openssl x509 -in tls.crt -text -noout>
+  tls.key: # <base64 encoded RSA private key. Decode it with: echo TEXT | base64 --decode > tls.key>
+kind: Secret
+metadata:
+  annotations:
+    cert-manager.io/alt-names: whereamisecure.XXXXX.sslip.io
+    cert-manager.io/certificate-name: whereamisecure-tls
+    cert-manager.io/common-name: whereamisecure.XXXXX.sslip.io
+    cert-manager.io/ip-sans: ""
+    cert-manager.io/issuer-group: cert-manager.io
+    cert-manager.io/issuer-kind: ClusterIssuer
+    cert-manager.io/issuer-name: letsencrypt-prod
+    cert-manager.io/uri-sans: ""
+  creationTimestamp: "2024-05-31T13:33:51Z"
+  labels:
+    controller.cert-manager.io/fao: "true"
+  name: whereamisecure-tls
+  namespace: whereamisecure
+type: kubernetes.io/tls
