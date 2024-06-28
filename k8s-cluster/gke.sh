@@ -179,6 +179,15 @@ fi
 #    --create-namespace \
 #    --namespace prometheus
 
+#kubectl get all -n prometheus
+
+#kubectl --namespace prometheus port-forward svc/prometheus-grafana 3000:80
+
+echo -e "${YELLOW}Use GCP Cloud Shell Web Preview${NC}"
+
+echo -e "${YELLOW}Default user/pass is admin/prom-operator${NC}"
+
+
 
 
 echo -e "${YELLOW}Ready to install whereami app?${NC}"
