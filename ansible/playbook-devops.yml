@@ -1,0 +1,140 @@
+---
+# Run this with:
+# ansible-playbook -K playbook.yml -i localhost,
+# If locale errors then run:
+# export LC_ALL=en_US.utf8 or locale-gen "en_US.UTF-8"
+
+- name: Build Jump Box
+  hosts: localhost
+  connection: local
+  become: true
+
+  vars:
+    TF_VERSION: 1.9.2
+
+  tasks:
+
+# Apt packages
+  - name: Install packages
+    apt:
+      name:
+        - jq
+        - unzip
+        - python3-pip
+      state: present
+
+# Zip with binary including check for existing installed binary
+  - name: Check for existing terraform installation
+    ansible.builtin.stat:
+      path: /usr/local/bin/terraform
+
+  - name: Download Terraform
+    ansible.builtin.get_url:
+      url: "https://releases.hashicorp.com/terraform/{{ TF_VERSION }}/terraform_{{ TF_VERSION }}_linux_amd64.zip"
+      dest: /tmp/terraform.zip
+  
+  - name: Unzip Terraform
+    ansible.builtin.unarchive:
+      src: /tmp/terraform.zip
+      dest: /usr/local/bin
+      remote_src: true
+      
+# Pip install
+  - name: install boto3
+    pip:
+      name: boto3
+      state: present
+      executable: pip3
+
+# Zip with installer including check for existing installation directory
+  - name: Download AWS CLI v2 archive
+    ansible.builtin.get_url:
+      url: https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip
+      dest: /tmp/awscliv2.zip
+  
+  - name: Unzip AWS CLI v2 archive
+    ansible.builtin.unarchive:
+      src: /tmp/awscliv2.zip
+      dest: /tmp
+      remote_src: true
+
+  - name: Check for existing AWS CLI installation
+    ansible.builtin.stat:
+      path: /usr/local/aws-cli/v2/current
+    register: aws_cli_current
+
+  - name: Install AWS CLI v2
+    ansible.builtin.command: "/tmp/aws/install -i /usr/local/aws-cli -b /usr/local/sbin {{ ('--update') if aws_cli_current.stat.exists}}"
+
+  - name: Remove temporary files
+    ansible.builtin.file:
+      path: /tmp/aws*
+      state: absent
+
+# Direct binary download with setting permissions and check for existing installed binary
+  - name: Get latest stable kubectl version
+    ansible.builtin.uri:
+      url: https://dl.k8s.io/release/stable.txt
+      return_content: true
+    register: kubectl_version
+
+  - name: Download kubectl
+    ansible.builtin.get_url:
+      url: "https://dl.k8s.io/release/{{ kubectl_version.content }}/bin/linux/amd64/kubectl"
+      dest: "/tmp/kubectl"
+
+  - name: Copy kubectl to final location and set permissions
+    ansible.builtin.copy:
+      src: "/tmp/kubectl"
+      dest: "/usr/local/bin/kubectl"
+      owner: root
+      group: root
+      mode: "+x"
+    become: true
+
+  - name: Check if kubectl is installed
+    ansible.builtin.command: kubectl version --output=yaml
+    register: client
+    failed_when: client.rc > 1
+    changed_when:
+      - "'clientVersion' in client.stdout"
+
+# Create directory and file
+  - name: Create dir
+    file:
+      path: /tmp/test
+      state: directory
+
+  - name: Create file
+    copy:
+      dest: /tmp/test/test.txt
+      content: |
+        Test file
+        created by Ansible
+
+# Disable service
+  - name: Disable ModemManager service
+    systemd:
+      name: ModemManager.service
+      enabled: no
+
+# Create script and make executable
+  - name: Create script
+    copy:
+      dest: /tmp/logger.sh
+      mode: "+x"
+      content: |
+        #!/usr/bin/env bash
+
+        timestamp=$(date +'%Y-%m-%d %H:%M:%S')
+        quote=$(curl -sX GET https://zenquotes.io/api/random | jq -r '.[0].q')
+        
+        echo "$timestamp  $quote" >> /var/log/test.log 2>&1
+
+# Create cron job for script to run every minute
+  - name: Create the cron job
+    cron:
+      name: "Execute logger.sh every minute"
+      minute: "*"
+      job: "/tmp/logger.sh"
+ 
