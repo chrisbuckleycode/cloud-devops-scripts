@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: python-logger
+---
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: python-logger-rs
+  namespace: python-logger
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: python-logger
+  template:
+    metadata:
+      labels:
+        app: python-logger
+    spec:
+      containers:
+        - name: python-logger
+          image: repo/python-logger:v1
+          imagePullPolicy: Always
