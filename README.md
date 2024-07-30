@@ -1,10 +1,12 @@
 # Cloud DevOps Scripts
 
-Various infrastructure and application related scripts/IaC including Python, Ansible and Terraform (AWS, Azure).
+Various infrastructure and application related scripts/IaC including:
 
-## Usage
-
-For production use, recommend you parameterize/modularize. This has been intentionally not done to better serve as aide memoire and learning material.
+- Terraform (multi-cloud)
+- Bash
+- Python
+- Ansible
+- Golang
 
 ## License
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
