@@ -1,4 +1,13 @@
-#!/usr/bin/env bash
+#!/bin/bash
+##
+## FILE: 7.control-addworkstation-ansible.sh
+##
+## DESCRIPTION: Adds Ansible Workstation to Control Node (run as ansible).
+##
+## AUTHOR: Chris Buckley (github.com/chrisbuckleycode)
+##
+## USAGE: 7.control-addworkstation-ansible.sh
+##
 
 # tested on:
 # CentOS Linux 7 (Core) x86_64

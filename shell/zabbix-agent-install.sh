@@ -1,6 +1,15 @@
-#!/usr/bin/env bash
+#!/bin/bash
+##
+## FILE: zabbix-agent-install.sh
+##
+## DESCRIPTION: Installs Zabbix agent2 on Ubuntu 22.04.
+##
+## AUTHOR: Chris Buckley (github.com/chrisbuckleycode)
+##
+## USAGE: zabbix-agent-install.sh
+##
 
-# Install script for Zabbix agent2 on Ubuntu 22.04. Reference:
+# Reference:
 # https://www.zabbix.com/download?zabbix=6.0&os_distribution=ubuntu&os_version=22.04&components=agent_2&db=&ws=
 
 # Specify the current server hostname

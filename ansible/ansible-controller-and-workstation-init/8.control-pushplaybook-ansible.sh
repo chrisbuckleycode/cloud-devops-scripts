@@ -1,4 +1,13 @@
-#!/usr/bin/env bash
+#!/bin/bash
+##
+## FILE: 8.control-pushplaybook-ansible.sh
+##
+## DESCRIPTION: Runs Ansible playbook against Workstation (run as ansible).
+##
+## AUTHOR: Chris Buckley (github.com/chrisbuckleycode)
+##
+## USAGE: 8.control-pushplaybook-ansible.sh
+##
 
 # tested on:
 # CentOS Linux 7 (Core) x86_64

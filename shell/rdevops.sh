@@ -1,6 +1,13 @@
-#!/usr/bin/env bash
-
-# Description: search r/devops on Reddit, from the command line.
+#!/bin/bash
+##
+## FILE: rdevops.sh
+##
+## DESCRIPTION: Searches r/devops on Reddit, from the command line.
+##
+## AUTHOR: Chris Buckley (github.com/chrisbuckleycode)
+##
+## USAGE: rdevops.sh <search terms>
+##
 
 # Convert script arguments to url suffix
 search_terms=$(IFS='%'; echo "$*")

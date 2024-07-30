@@ -1,4 +1,11 @@
-# Increases CPU slowly
+## FILE: cpu_bust.py
+##
+## DESCRIPTION: Increases CPU load slowly by doing nominal mathematical work.
+##
+## AUTHOR: Chris Buckley (github.com/chrisbuckleycode)
+##
+## USAGE: python3 cpu_bust.py
+##
 
 import math
 import time

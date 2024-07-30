@@ -1,4 +1,13 @@
-#!/usr/bin/env bash
+#!/bin/bash
+##
+## FILE: 9.remote-kube-prometheus-stack-decomm.sh
+##
+## DESCRIPTION: Uninstalls Helm chart, kube-prometheus-stack and removes traces (CRDs, namespace).
+##
+## AUTHOR: Chris Buckley (github.com/chrisbuckleycode)
+##
+## USAGE: 9.remote-kube-prometheus-stack-decomm.sh
+##
 
 # Kill any still forwarded ports
 pkill -f port-forward

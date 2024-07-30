@@ -1,6 +1,15 @@
-#!/usr/bin/env bash
+#!/bin/bash
+##
+## FILE: zabbix-server-install.sh
+##
+## DESCRIPTION: Installs Zabbix Server on Ubuntu 22.04, choices: Apache web server, MySQL database.
+##
+## AUTHOR: Chris Buckley (github.com/chrisbuckleycode)
+##
+## USAGE: zabbix-server-install.sh
+##
 
-# Install script for Zabbix Server, choices: Ubuntu 22.04, Apache web server, MySQL database. Reference:
+# Reference:
 # https://www.zabbix.com/download?zabbix=6.0&os_distribution=ubuntu&os_version=24.04&components=server_frontend_agent&db=mysql&ws=apache
 
 # Set the database password

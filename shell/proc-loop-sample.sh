@@ -1,8 +1,14 @@
-#!/usr/bin/env bash
+#!/bin/bash
+##
+## FILE: proc-loop-sample.sh
+##
+## DESCRIPTION: Loops over "status" file in each process directory in /proc, returns table sorted by requested stat e.g., "VmPeak", "VmSize", "VmRSS", etc.
+##
+## AUTHOR: Chris Buckley (github.com/chrisbuckleycode)
+##
+## USAGE: proc-loop-sample.sh <stat> e.g. proc-loop-sample.sh VmRSS
+##
 
-# Description:
-# - Loops over "status" file in each process directory in /proc
-# - Returns a table sorted by requested stat e.g., "VmPeak", "VmSize", "VmRSS", etc.
 # - Tested for virtual memory related stats. Awk command/unit handling may fail for others.
 
 # Check for the existence of required external programs

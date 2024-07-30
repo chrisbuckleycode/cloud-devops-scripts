@@ -1,11 +1,15 @@
-#!/usr/bin/env bash
-
-# Monitor cpu and memory usage over 10 minutes with running averages without external monitoring
-# To start the script in the background use: load-average.sh &
-# Tail the logfile using: tail -f monitor_output.txt
-# Restore to foreground using: fg
-
-
+#!/bin/bash
+##
+## FILE: load-average.sh
+##
+## DESCRIPTION: Monitors cpu and memory usage over a period, gets running averages without external monitoring.
+##
+## AUTHOR: Chris Buckley (github.com/chrisbuckleycode)
+##
+## USAGE: Start script in background:  load-average.sh &
+##        Tail the logfile using:      tail -f monitor_output.txt
+##        Restore to foreground using: fg
+##
 
 # Check if sysstat package is installed
 if ! command -v mpstat &>/dev/null; then
