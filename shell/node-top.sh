@@ -1,4 +1,13 @@
-#!/usr/bin/env bash
+#!/bin/bash
+##
+## FILE: node-top.sh
+##
+## DESCRIPTION: Displays a node's pods, sorted by CPU usage. Similar to kubectl get nodes.
+##
+## AUTHOR: Chris Buckley (github.com/chrisbuckleycode)
+##
+## USAGE: load-average.sh <node>
+##
 
 # Check for missing arguments
 if [ $# -eq 0 ]; then

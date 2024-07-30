@@ -1,3 +1,12 @@
+## FILE: backup_github_repos.py
+##
+## DESCRIPTION: Backs up GitHub repos in an account.
+##
+## AUTHOR: Chris Buckley (github.com/chrisbuckleycode)
+##
+## USAGE: python3 backup_github_repos.py
+##
+
 import requests
 import json, os
 import shutil

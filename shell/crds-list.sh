@@ -1,4 +1,13 @@
-#!/usr/bin/env bash
+#!/bin/bash
+##
+## FILE: crds-list.sh
+##
+## DESCRIPTION: Lists CRDs in a Kubernetes manifest.
+##
+## AUTHOR: Chris Buckley (github.com/chrisbuckleycode)
+##
+## USAGE: crds-list.sh <manifest.yaml>
+##
 
 input_file=$1
 

@@ -1,6 +1,13 @@
-#!/usr/bin/env bash
-
-# Description: search r/kubernetes on Reddit, from the command line.
+#!/bin/bash
+##
+## FILE: rkube.sh
+##
+## DESCRIPTION: Searches r/kubernetes on Reddit, from the command line.
+##
+## AUTHOR: Chris Buckley (github.com/chrisbuckleycode)
+##
+## USAGE: rkube.sh <search terms>
+##
 
 # Convert script arguments to url suffix
 search_terms=$(IFS='%'; echo "$*")

@@ -1,7 +1,15 @@
-#!/usr/bin/env bash
+#!/bin/bash
+##
+## FILE: sum-kubectl-top-pod.sh
+##
+## DESCRIPTION: Runs "kubectl top pod -A" and sums the CPU and Memory columns.
+##
+## AUTHOR: Chris Buckley (github.com/chrisbuckleycode)
+##
+## USAGE: sum-kubectl-top-pod.sh
+##
 
-# This script runs "kubectl top pod -A" and sums the CPU and Memory columns.
-
+# TODO(chrisbuckleycode): Add check for kubectl
 
 # Run the kubectl command and store the output in a variable
 output=$(kubectl top pod -A)

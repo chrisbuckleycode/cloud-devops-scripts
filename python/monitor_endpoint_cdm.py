@@ -1,4 +1,12 @@
-# CDM live monitor (cpu, disk, memory)
+## FILE: monitor_endpoint_cdm.py
+##
+## DESCRIPTION: Monitors in realtime, CPU, Disk and Memory.
+##
+## AUTHOR: Chris Buckley (github.com/chrisbuckleycode)
+##
+## USAGE: python3 monitor_endpoint_cdm.py
+##
+
 import psutil
 import time
 import os

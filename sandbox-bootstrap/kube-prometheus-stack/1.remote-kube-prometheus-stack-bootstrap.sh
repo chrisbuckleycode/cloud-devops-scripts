@@ -1,4 +1,13 @@
-#!/usr/bin/env bash
+#!/bin/bash
+##
+## FILE: 1.remote-kube-prometheus-stack-bootstrap.sh
+##
+## DESCRIPTION: Installs Helm chart, kube-prometheus-stack and forwards service ports.
+##
+## AUTHOR: Chris Buckley (github.com/chrisbuckleycode)
+##
+## USAGE: 1.remote-kube-prometheus-stack-bootstrap.sh
+##
 
 read -s -p "Enter Password for sudo: " sudoPW
 echo $sudoPW | sudo snap install helm --classic

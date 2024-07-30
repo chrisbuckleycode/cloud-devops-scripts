@@ -1,4 +1,13 @@
-#!/usr/bin/env bash
+#!/bin/bash
+##
+## FILE: aws-eks-cluster-list.sh
+##
+## DESCRIPTION: For an AWS account, returns EKS clusters, their instances, types and lifecycle.
+##
+## AUTHOR: Chris Buckley (github.com/chrisbuckleycode)
+##
+## USAGE: aws-eks-cluster-list.sh <aws_profile>
+##
 
 # Get AWS profile from first argument
 aws_profile=$1

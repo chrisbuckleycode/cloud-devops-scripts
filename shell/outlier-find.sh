@@ -1,19 +1,24 @@
-#!/usr/bin/env bash
+#!/bin/bash
+##
+## FILE: outlier-find.sh
+##
+## DESCRIPTION: Find outlier processes and display their statistics.
+##
+## AUTHOR: Chris Buckley (github.com/chrisbuckleycode)
+##
+## USAGE: outlier-find.sh
+##
 
-# Description:
-# - Find outlier processes from commands that return tabular info
-# - Outliers are identified using a measure of deviation: 'z-scores'
-# - Edit 'table' below to customize or add your own new commands
-
-# Usage:
+# TODO(chrisbuckleycode): Add check for installed package then remove comment below
 # - Install pre-requisites e.g.
 #     sudo yum install -y sysstat
 #     sudo apt install -y sysstat
-# - Modify the z_score lower/upper bounds to catch more/fewer outliers
 
+# TODO(chrisbuckleycode): Modify the z_score lower/upper bounds to catch more/fewer outliers
 
 # Define the table variable
 # Note: tested for Ubuntu. Yum/CentOS pidstat uses different column numbers
+# - Edit 'table' below to customize or add your own new commands
 table="Command,First_rows_to_ignore,Stat_name,Stat_column_number,Label_1_name,Label_1_column_number,Label_2_name,Label_2_column_number,z_score_lower_bound,z_score_upper_bound
 pidstat -d,3,kB_rd/s,5,PID,4,Command,9,-3,3
 pidstat -d,3,kB_wr/s,6,PID,4,Command,9,-3,3

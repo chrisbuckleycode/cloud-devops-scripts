@@ -1,4 +1,13 @@
-#!/usr/bin/env bash
+#!/bin/bash
+##
+## FILE: local-ssh-tunnel.sh
+##
+## DESCRIPTION: Creates SSH tunnels from laptop to bastion (for Grafana and Prometheus).
+##
+## AUTHOR: Chris Buckley (github.com/chrisbuckleycode)
+##
+## USAGE: local-ssh-tunnel.sh
+##
 
 if [ $# -eq 0 ]; then
   echo "Please provide the k8s server public IP as an argument."

@@ -1,4 +1,13 @@
-#!/usr/bin/env bash
+#!/bin/bash
+##
+## FILE: 6.workstation-init-cloud_user-sudo.sh
+##
+## DESCRIPTION: Sets Up Ansible Workstation (run as cloud_user, sudo).
+##
+## AUTHOR: Chris Buckley (github.com/chrisbuckleycode)
+##
+## USAGE: 6.workstation-init-cloud_user-sudo.sh
+##
 
 # tested on:
 # CentOS Linux 7 (Core) x86_64

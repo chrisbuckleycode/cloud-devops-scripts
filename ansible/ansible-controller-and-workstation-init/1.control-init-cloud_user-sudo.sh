@@ -1,5 +1,15 @@
-#!/usr/bin/env bash
+#!/bin/bash
+##
+## FILE: 1.control-init-cloud_user-sudo.sh
+##
+## DESCRIPTION: Sets Up Ansible Control Node (run as cloud_user, sudo).
+##
+## AUTHOR: Chris Buckley (github.com/chrisbuckleycode)
+##
+## USAGE: 1.control-init-cloud_user-sudo.sh
+##
 
+# Insecure, not for Production use!
 # tested on:
 # CentOS Linux 7 (Core) x86_64
 # AWS EC2 t3.micro
