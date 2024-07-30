@@ -10,7 +10,8 @@ Various infrastructure and application related scripts/IaC including:
 
 ## More
 
-See also my other main repo: [Useful Scripts](https://github.com/chrisbuckleycode/usefulscripts)
+- See my other main repo: [Useful Scripts](https://github.com/chrisbuckleycode/usefulscripts)
+- Simple Kubernetes sample (app source, k8s manifests and pipeline) in own repo: [Kubernetes Sample App](https://github.com/chrisbuckleycode/kubernetes-sample-app/)
 
 ## License
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
