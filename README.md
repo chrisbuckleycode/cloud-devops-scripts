@@ -10,7 +10,7 @@ Various infrastructure and application related scripts/IaC including:
 
 ## More
 
-See also my other main repo: [Useful Scripts][https://github.com/chrisbuckleycode/usefulscripts]
+See also my other main repo: [Useful Scripts](https://github.com/chrisbuckleycode/usefulscripts)
 
 ## License
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
